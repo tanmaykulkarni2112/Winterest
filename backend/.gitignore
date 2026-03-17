@@ -1,0 +1,38 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Build directories
+/tmp/
+bin/
+build/
+
+# Go build artifacts
+*.test
+*.out
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Air live reload
+tmp/
+
+# Environment files
+.env
+
+# Local data
+data/
+
+# Coverage
+coverage.out
