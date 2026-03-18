@@ -12,7 +12,7 @@ const AuthBottom = ({ text, linktext, onClick }: elements): JSX.Element => {
             <div>
                 {text}
             </div>
-            <div onClick={onClick} className="hover:text-gray-500 shadow">
+            <div onClick={onClick} className=" text-gray-500 hover:text-black">
                 {linktext}
             </div>
         </div>

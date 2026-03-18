@@ -3,11 +3,13 @@ import Subheader from "../components/Subheading";
 import InputBoxes from "../components/InputBoxes";
 import AuthBottom from "../components/AuthBottom";
 
+
 type SignupProps = {
   onClose: () => void;
+  openLogin: ()=>void;
 };
 
-const SignupPage = ({ onClose }: SignupProps) => {
+const SignupPage = ({ onClose,openLogin}: SignupProps) => {
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
@@ -41,7 +43,7 @@ const SignupPage = ({ onClose }: SignupProps) => {
         <AuthBottom
           text="Already a member?"
           linktext="Log in"
-          onClick={onClose}
+          onClick={openLogin}
         />
 
       </div>

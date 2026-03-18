@@ -50,11 +50,22 @@ const HeroSlides = ()=>{
     return(
         <section className="flex items-center justify-center gap-30 px-20 h-screen"> 
             {SigninOpen && <SignupPage onClose={()=>{
-                setSignInOpen(false)
-            }}/>}
+                setSignInOpen(false);
+            }}
+            openLogin={()=>{
+                setSignInOpen(false);
+                setLoginOpen(true);
+            }}
+            />}
+
             {loginOpen && <LoginPage onClose={()=>{
-                setLoginOpen(false)
-            }}/>}
+                setLoginOpen(false);
+            }}
+            openSignup={()=>{
+                setLoginOpen(false);
+                setSignInOpen(true);
+            }}
+            />}
             <div className="max-w-xl">
                 <h1 className="text-6xl font-bold">
                     Find ideas for

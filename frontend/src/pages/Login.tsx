@@ -5,9 +5,10 @@ import InputBoxes from "../components/InputBoxes";
 import AuthBottom from "../components/AuthBottom";
 
 type loginProps = {
-    onClose: ()=>void;
+    onClose: ()=>void,
+    openSignup: ()=>void;
 }  
-const LoginPage = ({onClose}:loginProps):JSX.Element =>{
+const LoginPage = ({ onClose,openSignup}:loginProps):JSX.Element =>{
     return(
         <>
             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-10">
@@ -25,7 +26,7 @@ const LoginPage = ({onClose}:loginProps):JSX.Element =>{
                     <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition">
                       Continue
                     </button>
-                    <AuthBottom text="Don't have an account?" linktext="Sign Up now" onClick={onClose}/>
+                    <AuthBottom text="Don't have an account?" linktext="Sign Up now" onClick={openSignup}/>
                 </div>
             </div>
         </>

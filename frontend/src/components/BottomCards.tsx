@@ -5,6 +5,7 @@ import card3 from "../assets/card3.png";
 import Button from "./SimButton";
 
 import SignupPage from "../pages/Signup";
+import LoginPage from "../pages/Login";
 
 const cards = [
   {
@@ -26,12 +27,26 @@ const cards = [
 
 const BottomCards = (): JSX.Element => {
   const [openSignUp,setOpenSignUp]=useState(false);
+  const [openLogin,setOpenLogin]=useState(false);
   return (
     <div className="bg-gray-100 w-full py-28">
       
       {openSignUp && <SignupPage onClose={()=>{
         setOpenSignUp(false)
-      }}/>}
+      }}
+      openLogin={()=>{
+        setOpenSignUp(false);
+        setOpenLogin(true);
+      }}
+      />}
+
+      {openLogin && <LoginPage
+      onClose={()=>setOpenLogin(false)}
+      openSignup={()=>{
+        setOpenLogin(false);
+        setOpenSignUp(true);
+      }}
+      />}
 
       <div className="max-w-5xl mx-auto flex flex-col items-center text-center gap-6 px-6">
         <div className="text-5xl md:text-6xl font-bold">

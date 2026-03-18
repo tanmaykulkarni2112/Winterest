@@ -8,8 +8,21 @@ const Appbar = () => {
     const [openLogIn,setOpenLogIn]=useState(false);
   return (
     <>  
-        {openSignup && <SignupPage onClose={()=>SetOpenSignup(false)}/>}
-        {openLogIn && <LoginPage onClose={()=> setOpenLogIn(false)}/>}
+        {openSignup && <SignupPage 
+        onClose={()=>SetOpenSignup(false)} 
+        openLogin={()=>{
+            SetOpenSignup(false);
+            setOpenLogIn(true);
+        }}/>}
+
+        {openLogIn && <LoginPage 
+        onClose={()=> setOpenLogIn(false)}
+        openSignup={()=>{
+            setOpenLogIn(false);
+            SetOpenSignup(true);
+        }}
+        />}
+
         <div className="h-20 w-full flex justify-between border-gray-200 shadow">
             <div className="flex justify-around p-6 px-11 gap-x-2">
                 <div className="text-lg text-red-500 hover:text-red-600 font-bold p-2 ">
