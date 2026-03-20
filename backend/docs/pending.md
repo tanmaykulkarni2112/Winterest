@@ -3,3 +3,5 @@
    `useless files - /internal/database , /sql`
 
    - 2.1 Only the register route with overwritting is implemented yet
+
+## Write authorization file
