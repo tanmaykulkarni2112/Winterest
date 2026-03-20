@@ -4,4 +4,6 @@
 
    - 2.1 Only the register route with overwritting is implemented yet
 
+## Verify commits
+
 ## Write authorization file
