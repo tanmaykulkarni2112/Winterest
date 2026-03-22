@@ -52,7 +52,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		Name: "session_token",
 		Value: sessionToken,
 		Expires: time.Now().Add(24 * time.Minute),
-		HttpOnly: true,
+		HttpOnly: false,
 	})
 	http.SetCookie(w, &http.Cookie{
 		Name: "csrf_token",

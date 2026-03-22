@@ -1,0 +1,247 @@
+{
+  "info": {
+    "name": "Authentication API Test Collection",
+    "description": "Complete test collection for Auth endpoints with CSRF and Session token validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"postmanuser\",\n  \"password\": \"postmantest123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["register"]
+        }
+      },
+      "response": [
+        {
+          "name": "Success - User Created",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\"msg\":\"New user created\"}"
+        }
+      ]
+    },
+    {
+      "name": "2. Login User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"postmanuser\",\n  \"password\": \"postmantest123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["login"]
+        }
+      },
+      "response": [
+        {
+          "name": "Success - Login Successful",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "session_token=<token_value>; Path=/; Expires=<time>; HttpOnly"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "csrf_token=<token_value>; Path=/; Expires=<time>"
+            }
+          ],
+          "body": "User login successful",
+          "description": "Cookies are set in response headers:\n- session_token (HttpOnly)\n- csrf_token (not HttpOnly)\nUse these values for subsequent requests"
+        }
+      ]
+    },
+    {
+      "name": "3. Access Protected Resource",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "<csrf_token_from_login>",
+            "type": "text",
+            "description": "Required: CSRF token from login Set-Cookie header"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"postmanuser\",\n  \"password\": \"postmantest123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/protected",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["protected"]
+        }
+      },
+      "response": [
+        {
+          "name": "Success - Access Granted",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\"msg\":\"Access granted to protected resource\",\"username\":\"postmanuser\"}"
+        },
+        {
+          "name": "Error - Missing CSRF Token",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            }
+          ],
+          "body": "Unauthorized",
+          "description": "Returned when X-CSRF-Token header is missing or invalid"
+        },
+        {
+          "name": "Error - Missing Session Cookie",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            }
+          ],
+          "body": "Unauthorized",
+          "description": "Returned when session_token cookie is missing or invalid"
+        }
+      ]
+    },
+    {
+      "name": "4. Logout User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-CSRF-Token",
+            "value": "<csrf_token_from_login>",
+            "type": "text",
+            "description": "Required: CSRF token from login Set-Cookie header"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/logout",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["logout"]
+        }
+      },
+      "response": [
+        {
+          "name": "Success - Logged Out",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "session_token=; Path=/; Expires=<past_time>; HttpOnly"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "csrf_token=; Path=/; Expires=<past_time>"
+            }
+          ],
+          "body": "{\"msg\":\"Logged out successfully\"}"
+        }
+      ]
+    },
+    {
+      "name": "5. Home Endpoint",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/home",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["home"]
+        }
+      },
+      "response": [
+        {
+          "name": "Success - Home Page",
+          "status": "OK",
+          "code": 200,
+          "description": "Public endpoint - no authentication required"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "session_token",
+      "value": "",
+      "type": "string",
+      "description": "Automatically extracted from login response"
+    },
+    {
+      "key": "csrf_token",
+      "value": "",
+      "type": "string",
+      "description": "Automatically extracted from login response"
+    }
+  ]
+}
