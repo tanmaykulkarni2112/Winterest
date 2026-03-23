@@ -1,4 +1,4 @@
-import type { JSX } from 'react'
+import { type JSX } from 'react'
 import Appbar from '../components/Appbar'
 import BottomCards from '../components/BottomCards'
 import BottomInfo from '../components/BottomInfo'
