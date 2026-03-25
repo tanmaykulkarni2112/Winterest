@@ -3,13 +3,14 @@ import SignupPage from "../pages/Signup";
 import LoginPage from "../pages/Login";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
+import { useAuthStore } from "../store/atoms/AuthStat";
 
 
 const Appbar = () => {
     const [openSignup,SetOpenSignup] = useState(false);
     const [openLogIn,setOpenLogIn]=useState(false);
-    const [loggedIn,setLoggedIn]=useState(false);
-
+    const setLoggedIn = useAuthStore((s)=>s.setIsLoggedIn)
+    const loggedIn = useAuthStore((s)=>s.isLoggedIn);
   return (
     <>  
         {openSignup && <SignupPage 
@@ -35,7 +36,7 @@ const Appbar = () => {
                 <div className="text-lg font-bold p-2">
                     <div onClick={()=>{
                         // testing purposes
-                        setLoggedIn(prev=>!prev)
+                        setLoggedIn(!loggedIn);
                     }} className=" hover:bg-slate-100 rounded-lg">
                         Explore
                     </div>

@@ -5,54 +5,66 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/tanmaykulkarni2112/Winterest/backend/data"
 	"github.com/tanmaykulkarni2112/Winterest/backend/internal/auth/model"
-	"github.com/tanmaykulkarni2112/Winterest/backend/internal/auth/utils"
+	"github.com/tanmaykulkarni2112/Winterest/backend/internal/factory"
 )
 
-type requestPayload struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+// RegisterUserHandler wraps the RegisterUser handler with dependencies
+type RegisterUserHandler struct {
+	userService factory.UserService
 }
 
-func RegisterUser(w http.ResponseWriter, r *http.Request) {
+// NewRegisterUserHandler creates a new RegisterUser handler
+func NewRegisterUserHandler(userService factory.UserService) *RegisterUserHandler {
+	return &RegisterUserHandler{
+		userService: userService,
+	}
+}
+
+// ServeHTTP handles user registration requests
+func (h *RegisterUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		er := http.StatusMethodNotAllowed
-		http.Error(w, "Invalid method", er)
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 		return
 	}
-	// reading from the body
-	payload , err := io.ReadAll(r.Body)
+
+	payload, err := io.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Cannot parse Body" , http.StatusInternalServerError)
+		http.Error(w, "Cannot parse Body", http.StatusInternalServerError)
 		return
 	}
-	var requestpayload requestPayload
-	err = json.Unmarshal(payload, &requestpayload)
+
+	var requestPayload model.RequestPayload
+	err = json.Unmarshal(payload, &requestPayload)
 	if err != nil {
 		http.Error(w, "Invalid request format", http.StatusBadRequest)
-		return 
-	}
-	username  := requestpayload.Username
-	password  := requestpayload.Password
-	if len(username) < 8 ||  len(password) < 8 {
-		er := http.StatusNotAcceptable
-		http.Error(w, "Invalid user / password", er)
-		return 
+		return
 	}
 
-	if _ , ok := data.Users[username]; ok {
-		er := http.StatusConflict
-		http.Error(w, "User already exist", er)
-		return 
+	username := requestPayload.Username
+	password := requestPayload.Password
+
+	err = h.userService.RegisterUser(username, password)
+	if err != nil {
+		switch err {
+		case factory.ErrInvalidLength:
+			http.Error(w, "Invalid user / password", http.StatusNotAcceptable)
+		case factory.ErrUserExists:
+			http.Error(w, "User already exist", http.StatusConflict)
+		default:
+			http.Error(w, "Failed to register user", http.StatusInternalServerError)
+		}
+		return
 	}
 
-	hashPassword , _ := utils.HashPassword(password)
-	data.Users[username] = model.Login{
-		HashPassword : hashPassword,
-	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-    "msg": "New user created",
-})
+		"msg": "New user created",
+	})
+}
+
+// RegisterUser is a convenience function for backwards compatibility
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
+	// This will be replaced in main.go with proper factory injection
+	http.Error(w, "Handler not properly initialized", http.StatusInternalServerError)
 }

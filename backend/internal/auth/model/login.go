@@ -5,3 +5,8 @@ type Login struct {
 	SessionToken string
 	CSRFToken    string
 }
+
+type RequestPayload struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
