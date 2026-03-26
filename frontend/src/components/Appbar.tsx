@@ -3,7 +3,7 @@ import SignupPage from "../pages/Signup";
 import LoginPage from "../pages/Login";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
-import { useAuthStore } from "../store/atoms/AuthStat";
+import { useAuthStore } from "../store/AuthStat";
 
 
 const Appbar = () => {
